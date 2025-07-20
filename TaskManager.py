@@ -8,6 +8,19 @@ descriptors
 """
 from queue import Queue as q
 import argparse
+import sqlite3
+
+# conn = sqlite3.connect("tasks.db")
+# curr = conn.cursor()
+# curr.execute("""
+# CREATE TABLE IF NOT EXISTS tasks(
+#     id  INTEGER PRIMARYT KEY AUTOINCREMENT,
+#     description STRING NOT NULL
+#              );
+#              """)
+# conn.commit()
+# conn.close
+
 
 class TaskManager:
     """
@@ -30,6 +43,15 @@ class TaskManager:
     def add(cls, phrase):
         cls.tasks[cls.ids] = phrase
         cls.ids += 1
+        # with sqlite3.connect('tasks.db') as conn:  #with automatically commits and closes
+        #     curr = conn.cursor()
+        #     curr.execute(
+        #         "INSERT INTO tasks(description) VALUES(?);", #values(?) creates placeholder values to be replaced by the characters in phrase
+        #         (phrase,)
+
+        #     )
+
+
     @classmethod
     def remove(cls, phrase, id):
         cls.tasks = {key:value for key, value in cls.tasks.items() if key != id} 
@@ -41,11 +63,7 @@ class TaskManager:
     def search(cls, keyword):
         pass
 
-TaskManager.execute("add", "milk")
-TaskManager.execute("show")
 
-
-"""
 def main():
     def int_or_str(value):
         try:
@@ -67,11 +85,31 @@ def main():
         nargs = "?", #makes the argument optional
         help = "the id of the entry you want to access or the phrase"
     )
-    args = parser.parse_args()
+    while True:
+        try:
+            line = input("> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nGoodbye!")
+            break
+        if not line: #if the user just enters, it returns '' which is falsey 
+            continue
+
+        parts = line.split()
+        if len(parts) > 1:
+            parts = [parts[0], ' '.join(parts[1:])]
+
+        try:
+            args = parser.parse_args(parts)
+        except SystemExit:
+            continue
+
+        TaskManager.execute(args.function, args.item)
+
+
 
 if __name__ == "__main__":
     main()
-"""
+
 
 
 
@@ -82,4 +120,5 @@ if __name__ == "__main__":
 
 
          
+
 
