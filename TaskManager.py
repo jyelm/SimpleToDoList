@@ -32,13 +32,25 @@ class TaskManager:
     @classmethod
     def execute(cls, keyword:str, phrase=False):
         action = getattr(cls, keyword)
+
+        def is_int(s:str) -> bool:
+            try:
+                int(s)
+                return True
+            except ValueError:
+                return False
         try:
             if phrase:
+                if is_int(phrase):
+                    return action(int(phrase))
                 return action(phrase)
             else:
                 return action()
         except:
             raise AttributeError(f"No action with {keyword}")
+            
+
+
     @classmethod
     def add(cls, phrase):
         cls.tasks[cls.ids] = phrase
@@ -51,9 +63,8 @@ class TaskManager:
 
         #     )
 
-
     @classmethod
-    def remove(cls, phrase, id):
+    def remove(cls, id):
         cls.tasks = {key:value for key, value in cls.tasks.items() if key != id} 
     @classmethod
     def show(cls):
@@ -61,7 +72,14 @@ class TaskManager:
             print(f"{i}\n")
     @classmethod
     def search(cls, keyword):
-        pass
+        for i in cls.tasks.values():
+            if keyword in i:
+                print(f"{i}\n")
+
+class BST:
+    """
+    have the method of storage be a binary search tree instead of a simple dictionary
+    """
 
 
 def main():
