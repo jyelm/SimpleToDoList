@@ -80,8 +80,49 @@ class BST:
     """
     have the method of storage be a binary search tree instead of a simple dictionary
     """
+    def __init__(self):
+        self.root = None
+    class Node:
+        def __init__(self, key):
+            self.left = None
+            self.right = None
+            self.key = key
+    def insert(self,key):
+        def _insert(node, key):
+            if node is None:
+                return BST.Node(key)
+            parent = None
+            temp = BST.Node(key)
+            curr = node
+            while curr is not None:
+                parent = curr
+                if curr.key > key:
+                    curr = curr.left #traversing
+                elif curr.key < key:
+                    curr = curr.right
+                else:
+                    return node
+            if key > parent.key:
+                parent.right = temp
+            else:
+                parent.left = temp
+            return node
+        self.root = _insert(self.root, key)
+  #when called, python binds insert to the class, which adds and unwanted positional argument. Static method tells python to just retunr raw function; maybe the benfit to useing classes in general is to just group all related information and functionality in the same namespace
+    def inorder(self):
+        def _inorder(root):
+            if root:
+                _inorder(root.left)
+                print(root.key, end=" ")
+                _inorder(root.right)
+        _inorder(self.root)
 
+tree = BST()
+for k in (50,30,20,40,70,60,80):
+    tree.insert(k)
+tree.inorder()   # same output
 
+"""
 def main():
     def int_or_str(value):
         try:
@@ -127,7 +168,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+"""
 
 
 
